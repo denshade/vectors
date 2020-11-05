@@ -19,7 +19,26 @@ const clearScreen = () => {
 
 const lengthVect = (points) => {
     return Math.sqrt(points[0] * points[0] + points[1]*points[1]);
-}
+};
+
+const lengthAngle = (points) => {
+    const x = points[0];
+    const y = points[1];
+    return Math.atan(y/x) * 360 / (2*Math.PI) ; //2*P/360 = RAD/GRAD
+};
+const lengthAngleRad = (points) => {
+    const x = points[0];
+    const y = points[1];
+    return Math.atan(y/x); //2*P/360 = RAD/GRAD
+};
+
+const unitVector = (points) => {
+    const angle = lengthAngleRad(points);
+    const lengthVector = lengthVect(points);
+    const i =Math.cos(angle);
+    const j = Math.sin(angle);
+    return i + "i + " + j + "j";
+};
 
 const loadVectors = () => {
     clearScreen();
@@ -37,8 +56,10 @@ const loadVectors = () => {
     });
     renderVector(resultingVector[0], resultingVector[1], 500);
     const results = document.getElementById('results') as HTMLDivElement;
-    results.innerText = "Resulting vector: " + resultingVector;
-    results.innerText = "Resulting length: " + lengthVect(resultingVector);
+    results.innerText = "Resulting vector: " + resultingVector + "\n";
+    results.innerText += "Resulting length: " + lengthVect(resultingVector) + "\n";
+    results.innerText += "Resulting angle: " + lengthAngle(resultingVector) + "\n";
+    results.innerText += "Unit vector: " + unitVector(resultingVector) + "\n";
 
 
 };
