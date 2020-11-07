@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vectors</title>
+
+</head>
+<body>
+<label for="x">x</label>
+<input type="number" id="x">
+<label for="y">y</label>
+<input type="number" id="y">
+<button onclick="calculateAngle('x', 'y', 'answer')">Calculate angle against x/y axis</button><BR/>
+<div id="answer"></div>
+<BR/>
+
+<label for="lengthVector">Length vector</label>
+<input type="number" id="lengthVector">
+<label for="angleDegrees">Angle in degrees</label>
+<input type="number" id="angleDegrees">
+
+
+<button onclick="calculateXandY('lengthVector', 'angleDegrees', 'answer2')">Calculate x and y component</button><BR/>
+<div id="answer2"></div>
+
+
+<BR/>
+<canvas id="renderer" width="1000" height="1000">
+</canvas>
+<script src="renderer.js"></script>
+
+<div id="results"></div>
+
+</body>
+</html>

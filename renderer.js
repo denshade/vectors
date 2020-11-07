@@ -54,3 +54,28 @@ var loadVectors = function () {
     results.innerText += "Resulting angle: " + lengthAngle(resultingVector) + "\n";
     results.innerText += "Unit vector: " + unitVector(resultingVector) + "\n";
 };
+var convertRadToDegrees = function (rads) {
+    return (360 / (2 * Math.PI)) * rads;
+};
+var convertDegreesToRad = function (degrees) {
+    return ((2 * Math.PI) / 360) * degrees;
+};
+var calculateAngle = function (elementIdX, elementIdY, resultId) {
+    var XEl = document.getElementById(elementIdX);
+    var YEl = document.getElementById(elementIdY);
+    var resultEl = document.getElementById(resultId);
+    var xNum = parseFloat(XEl.value);
+    var yNum = parseFloat(YEl.value);
+    resultEl.innerText = Math.atan2(yNum, xNum) + " rads \n" + convertRadToDegrees(Math.atan2(yNum, xNum)) + "°";
+};
+var calculateXandY = function (lengthVector, angleDegreesId, resultId) {
+    var lengthEl = document.getElementById(lengthVector);
+    var angleDegreesEl = document.getElementById(angleDegreesId);
+    var resultEl = document.getElementById(resultId);
+    var angleDegrees = parseFloat(angleDegreesEl.value);
+    var length = parseFloat(lengthEl.value);
+    var angleRads = convertDegreesToRad(angleDegrees);
+    var cx = Math.cos(angleRads) * length;
+    var cy = Math.sin(angleRads) * length;
+    resultEl.innerText = "x:" + cx + " y: " + cy;
+};

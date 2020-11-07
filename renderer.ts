@@ -63,3 +63,34 @@ const loadVectors = () => {
 
 
 };
+
+const convertRadToDegrees = (rads) => {
+    return  (360 / (2*Math.PI)) *rads;
+};
+
+const convertDegreesToRad = (degrees) => {
+    return  ((2*Math.PI) / 360) *degrees;
+};
+
+const calculateAngle = (elementIdX, elementIdY, resultId) => {
+    const XEl = document.getElementById(elementIdX) as HTMLInputElement;
+    const YEl = document.getElementById(elementIdY) as HTMLInputElement;
+    const resultEl = document.getElementById(resultId) as HTMLElement;
+    const xNum = parseFloat(XEl.value);
+    const yNum = parseFloat(YEl.value);
+
+    resultEl.innerText = Math.atan2(yNum, xNum) + " rads \n" + convertRadToDegrees(Math.atan2(yNum, xNum))  +  "°";
+};
+
+const calculateXandY = (lengthVector, angleDegreesId, resultId) => {
+    const lengthEl = document.getElementById(lengthVector) as HTMLInputElement;
+    const angleDegreesEl = document.getElementById(angleDegreesId) as HTMLInputElement;
+    const resultEl = document.getElementById(resultId) as HTMLElement;
+    const angleDegrees = parseFloat(angleDegreesEl.value);
+    const length = parseFloat(lengthEl.value);
+    const angleRads = convertDegreesToRad(angleDegrees);
+    const cx = Math.cos(angleRads) * length;
+    const cy = Math.sin(angleRads) * length;
+    resultEl.innerText = "x:" + cx + " y: " + cy;
+};
+
