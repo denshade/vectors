@@ -164,12 +164,13 @@ const loadGravity = () => {
         for (let y = x + 1; y < entities.length; y++) {
             const xEntity = entities[x];
             const yEntity = entities[y];
-            const force = xEntity.mass * yEntity.mass * G / distance(xEntity, yEntity);
-            solutions += "Force of " + x + "<->" + y +":" + force;
+            const distanceOfEnty = distance(xEntity, yEntity);
+            const force = (xEntity.mass * yEntity.mass * G) / (distanceOfEnty*distanceOfEnty);
+            solutions += "\nForce of " + x + " <-> " + y +": " + force;
         }
     }
     const results = document.getElementById('results') as HTMLDivElement;
-    results.innerText = "solutions\n";
+    results.innerText = solutions;
 
 
 };

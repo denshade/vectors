@@ -146,12 +146,13 @@ var loadGravity = function () {
         for (var y = x + 1; y < entities.length; y++) {
             var xEntity = entities[x];
             var yEntity = entities[y];
-            var force = xEntity.mass * yEntity.mass * G / distance(xEntity, yEntity);
-            solutions += "\nForce of " + x + "<->" + y + ": " + force;
+            var distanceOfEnty = distance(xEntity, yEntity);
+            var force = (xEntity.mass * yEntity.mass * G) / (distanceOfEnty * distanceOfEnty);
+            solutions += "\nForce of " + x + " <-> " + y + ": " + force;
         }
     }
     var results = document.getElementById('results');
-    results.innerText = "solutions:" + solutions;
+    results.innerText = solutions;
 };
 var distance = function (xEntity, yEntity) {
     var dx = xEntity.x - yEntity.x;
