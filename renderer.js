@@ -1,9 +1,10 @@
-var renderVector = function (cx, cy, middle) {
+var renderVector = function (cx, cy, middle, color) {
     var renderer = document.getElementById('renderer');
     var context = renderer.getContext('2d');
-    context.beginPath();
     var x = middle + cx;
     var y = middle - cy;
+    context.strokeStyle = color;
+    context.beginPath();
     context.moveTo(middle, middle);
     context.lineTo(x, y);
     context.stroke();
@@ -11,7 +12,10 @@ var renderVector = function (cx, cy, middle) {
 var clearScreen = function () {
     var renderer = document.getElementById('renderer');
     var context = renderer.getContext('2d');
-    context.clearRect(0, 0, 1000, 1000);
+    context.clearRect(0, 0, renderer.width, renderer.height);
+    context.beginPath();
+    context.rect(0, 0, renderer.width, renderer.height);
+    context.stroke();
 };
 var lengthVect = function (points) {
     return Math.sqrt(points[0] * points[0] + points[1] * points[1]);
@@ -28,7 +32,6 @@ var lengthAngleRad = function (points) {
 };
 var unitVector = function (points) {
     var angle = lengthAngleRad(points);
-    var lengthVector = lengthVect(points);
     var i = Math.cos(angle);
     var j = Math.sin(angle);
     return i + "i + " + j + "j";
@@ -38,16 +41,18 @@ var loadVectors = function () {
     var dataSource = document.getElementById('data');
     var text = dataSource.value;
     var resultingVector = [0, 0];
+    renderVector(0, 100, 500, 'green');
+    renderVector(100, 0, 500, 'green');
     text.split("\n").forEach(function (text) {
         if (text.split(",").length == 2) {
             var x = parseFloat(text.split(",")[0]);
             var y = parseFloat(text.split(",")[1]);
-            renderVector(x, y, 500);
+            renderVector(x, y, 500, 'black');
             resultingVector[0] += x;
             resultingVector[1] += y;
         }
     });
-    renderVector(resultingVector[0], resultingVector[1], 500);
+    renderVector(resultingVector[0], resultingVector[1], 500, 'blue');
     var results = document.getElementById('results');
     results.innerText = "Resulting vector: " + resultingVector + "\n";
     results.innerText += "Resulting length: " + lengthVect(resultingVector) + "\n";
@@ -78,4 +83,39 @@ var calculateXandY = function (lengthVector, angleDegreesId, resultId) {
     var cx = Math.cos(angleRads) * length;
     var cy = Math.sin(angleRads) * length;
     resultEl.innerText = "x:" + cx + " y: " + cy;
+};
+var loadGraph = function () {
+    clearScreen();
+    var dataSource = document.getElementById('data');
+    var text = dataSource.value;
+    var maxX = 0;
+    var maxY = 0;
+    text.split("\n").forEach(function (text) {
+        if (text.split(",").length == 2) {
+            var x = parseFloat(text.split(",")[0]);
+            var y = parseFloat(text.split(",")[1]);
+            if (x > maxX)
+                maxX = x;
+            if (y > maxY)
+                maxY = y;
+        }
+    });
+    var renderer = document.getElementById('renderer');
+    var width = renderer.width;
+    var height = renderer.height;
+    text.split("\n").forEach(function (text) {
+        if (text.split(",").length == 2) {
+            var x = parseFloat(text.split(",")[0]);
+            var y = parseFloat(text.split(",")[1]);
+            renderDot(width * x / maxX, height - (height * y / maxY));
+        }
+    });
+};
+var renderDot = function (x, y) {
+    var renderer = document.getElementById('renderer');
+    var context = renderer.getContext('2d');
+    context.fillStyle = 'black';
+    context.beginPath();
+    context.rect(x, y, 2, 2);
+    context.stroke();
 };

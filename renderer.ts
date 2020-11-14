@@ -1,11 +1,11 @@
-const renderVector = (cx: number, cy: number, middle) =>
+const renderVector = (cx: number, cy: number, middle, color : string) =>
 {
     const renderer = document.getElementById('renderer') as HTMLCanvasElement;
     const context = renderer.getContext('2d') as CanvasRenderingContext2D;
-    context.beginPath();
     const x = middle + cx;
     const y = middle - cy;
-
+    context.strokeStyle = color;
+    context.beginPath();
     context.moveTo(middle,middle);
     context.lineTo(x, y);
     context.stroke();
@@ -14,7 +14,10 @@ const renderVector = (cx: number, cy: number, middle) =>
 const clearScreen = () => {
     const renderer = document.getElementById('renderer') as HTMLCanvasElement;
     const context = renderer.getContext('2d') as CanvasRenderingContext2D;
-    context.clearRect(0,0, 1000, 1000);
+    context.clearRect(0,0, renderer.width, renderer.height);
+    context.beginPath();
+    context.rect(0,0,renderer.width, renderer.height);
+    context.stroke();
 };
 
 const lengthVect = (points) => {
@@ -34,8 +37,7 @@ const lengthAngleRad = (points) => {
 
 const unitVector = (points) => {
     const angle = lengthAngleRad(points);
-    const lengthVector = lengthVect(points);
-    const i =Math.cos(angle);
+    const i = Math.cos(angle);
     const j = Math.sin(angle);
     return i + "i + " + j + "j";
 };
@@ -45,16 +47,19 @@ const loadVectors = () => {
     const dataSource = document.getElementById('data') as HTMLTextAreaElement;
     const text = dataSource.value;
     let resultingVector = [0,0];
+    renderVector(0, 100, 500, 'green');
+    renderVector(100, 0, 500, 'green');
+
     text.split("\n").forEach((text) => {
         if (text.split(",").length == 2) {
             const x = parseFloat(text.split(",")[0]);
             const y = parseFloat(text.split(",")[1]);
-            renderVector(x, y, 500);
+            renderVector(x, y, 500, 'black');
             resultingVector[0] += x;
             resultingVector[1] += y;
         }
     });
-    renderVector(resultingVector[0], resultingVector[1], 500);
+    renderVector(resultingVector[0], resultingVector[1], 500, 'blue');
     const results = document.getElementById('results') as HTMLDivElement;
     results.innerText = "Resulting vector: " + resultingVector + "\n";
     results.innerText += "Resulting length: " + lengthVect(resultingVector) + "\n";
@@ -92,5 +97,42 @@ const calculateXandY = (lengthVector, angleDegreesId, resultId) => {
     const cx = Math.cos(angleRads) * length;
     const cy = Math.sin(angleRads) * length;
     resultEl.innerText = "x:" + cx + " y: " + cy;
+};
+
+const loadGraph = () => {
+    clearScreen();
+    const dataSource = document.getElementById('data') as HTMLTextAreaElement;
+    const text = dataSource.value;
+    let maxX = 0;
+    let maxY = 0;
+    text.split("\n").forEach((text) => {
+        if (text.split(",").length == 2) {
+            const x = parseFloat(text.split(",")[0]);
+            const y = parseFloat(text.split(",")[1]);
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+        }
+    });
+    const renderer = document.getElementById('renderer') as HTMLCanvasElement;
+    const width = renderer.width;
+    const height = renderer.height;
+
+    text.split("\n").forEach(function (text) {
+        if (text.split(",").length == 2) {
+            let x = parseFloat(text.split(",")[0]);
+            let y = parseFloat(text.split(",")[1]);
+            renderDot(width * x / maxX,height - (height* y / maxY));
+        }
+    });
+};
+
+const renderDot = (x,y) => {
+    const renderer = document.getElementById('renderer') as HTMLCanvasElement;
+    const context = renderer.getContext('2d') as CanvasRenderingContext2D;
+    context.fillStyle = 'black';
+    context.beginPath();
+    context.rect(x,y,2,2);
+    context.stroke();
+
 };
 
