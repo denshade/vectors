@@ -136,3 +136,48 @@ const renderDot = (x,y) => {
 
 };
 
+class Entity {
+    public x;
+    public y;
+    public mass;
+}
+
+const loadGravity = () => {
+    const dataSource = document.getElementById('data') as HTMLTextAreaElement;
+    const text = dataSource.value;
+    const entities = [];
+    text.split("\n").forEach((text) => {
+        if (text.split(",").length == 3) {
+            const x = parseFloat(text.split(",")[0]);
+            const y = parseFloat(text.split(",")[1]);
+            const mass = parseFloat(text.split(",")[2]);
+            let ent = new Entity();
+            ent.x = x;
+            ent.y = y;
+            ent.mass = mass;
+            entities.push(ent);
+        }
+    });
+    let solutions = "";
+    const G = 6.674E-11;
+    for (let x = 0; x < entities.length; x++) {
+        for (let y = x + 1; y < entities.length; y++) {
+            const xEntity = entities[x];
+            const yEntity = entities[y];
+            const force = xEntity.mass * yEntity.mass * G / distance(xEntity, yEntity);
+            solutions += "Force of " + x + "<->" + y +":" + force;
+        }
+    }
+    const results = document.getElementById('results') as HTMLDivElement;
+    results.innerText = "solutions\n";
+
+
+};
+
+const distance = (xEntity: Entity, yEntity: Entity): number => {
+    const dx = xEntity.x - yEntity.x;
+    const dy = xEntity.y - yEntity.y;
+    return Math.sqrt(dx*dx + dy*dy);
+
+};
+

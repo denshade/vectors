@@ -119,3 +119,42 @@ var renderDot = function (x, y) {
     context.rect(x, y, 2, 2);
     context.stroke();
 };
+var Entity = /** @class */ (function () {
+    function Entity() {
+    }
+    return Entity;
+}());
+var loadGravity = function () {
+    var dataSource = document.getElementById('data');
+    var text = dataSource.value;
+    var entities = [];
+    text.split("\n").forEach(function (text) {
+        if (text.split(",").length == 3) {
+            var x = parseFloat(text.split(",")[0]);
+            var y = parseFloat(text.split(",")[1]);
+            var mass = parseFloat(text.split(",")[2]);
+            var ent = new Entity();
+            ent.x = x;
+            ent.y = y;
+            ent.mass = mass;
+            entities.push(ent);
+        }
+    });
+    var solutions = "";
+    var G = 6.674E-11;
+    for (var x = 0; x < entities.length; x++) {
+        for (var y = x + 1; y < entities.length; y++) {
+            var xEntity = entities[x];
+            var yEntity = entities[y];
+            var force = xEntity.mass * yEntity.mass * G / distance(xEntity, yEntity);
+            solutions += "\nForce of " + x + "<->" + y + ": " + force;
+        }
+    }
+    var results = document.getElementById('results');
+    results.innerText = "solutions:" + solutions;
+};
+var distance = function (xEntity, yEntity) {
+    var dx = xEntity.x - yEntity.x;
+    var dy = xEntity.y - yEntity.y;
+    return Math.sqrt(dx * dx + dy * dy);
+};
